@@ -2,11 +2,13 @@ package Tools
 
 import (
 	"fmt"
-	"github.com/pborman/uuid"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
 	"time"
+
+	"github.com/pborman/uuid"
 )
 
 type TgTMInterval struct {
@@ -53,29 +55,5 @@ func GetNewUUID() string {
 
 /// get buf from special file
 func GetCfgBuf(path string) ([]byte, error) {
-
-	var fLen int64
-	if finfo, err := os.Stat(path); os.IsNotExist(err) {
-		return nil, err
-	} else if err != nil {
-		return nil, err
-	} else {
-		fLen = finfo.Size()
-	}
-
-	/// read file
-	f, err := os.Open(path)
-	if err != nil {
-		return nil, err
-	}
-
-	var buf []byte = make([]byte, fLen+1024)
-	rLen, err := f.Read(buf)
-	if err != nil {
-		return nil, err
-	}
-	f.Close()
-	buf = buf[0:rLen]
-
-	return buf, nil
+	return ioutil.ReadFile(path)
 }
